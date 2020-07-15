@@ -1,0 +1,56 @@
+#include <Servo.h>
+int const trigPin = 6; // sets pin 6 to trigger pin
+int const echoPin = 5; // sets pin 5 to distance measuring pin
+//int const ledPin1 = 11; // if you have UV-C LEDs, then uncomment this line
+int const relayPin = 12;  // relay pin
+//int const ledPin3 = 13; // if you have UV-C LEDs, then uncomment this line
+
+Servo myservo;
+Servo myservo2;
+void setup()
+{
+  pinMode(trigPin, OUTPUT);// trig pin will pulse
+  pinMode(echoPin, INPUT); // echo pin should be an input to get pulse width
+ // pinMode(ledPin1, OUTPUT);// The next three lines are the UV LEDs -- if you have UV-C LEDs, then uncomment this line and the ledPin3 line
+  pinMode(relayPin, OUTPUT);
+ // pinMode(ledPin3, OUTPUT);
+  
+  //digitalWrite(ledPin1, HIGH); // turns UV LEDs on to sterilize the masks - the LEDs never turn off for more sterilization capability,
+  // and because they have 25,000 mins of life, which will be much more than 2 weeks since you will probably turn it off at night :) --if you have UV-C LEDs, then uncomment this line
+  
+  digitalWrite(relayPin, HIGH);
+ // digitalWrite(ledPin3, HIGH); // if you have UV-C LEDs, then uncomment this line
+
+  myservo.attach(9);
+  myservo.attach(10);
+
+}
+void loop()
+{
+
+  int duration, distance;
+
+  // Output pulse with 1ms width on trigPin
+  digitalWrite(trigPin, HIGH);
+  delay(1);
+  digitalWrite(trigPin, LOW);
+  // Measure the pulse input in echo pin
+
+  duration = pulseIn(echoPin, HIGH);
+  // Distance is half the duration divided by 29.1 (from datasheet)
+
+  distance = (duration / 2) / 29.1;
+
+  if (distance <= 15 && distance >= 0) {
+
+    myservo.write(130);
+    myservo2.write(90); 
+
+  } else {
+
+    myservo.write(22);
+    myservo2.write(45);
+  }
+  // Waiting 60 ms won't hurt any one
+  delay(60);
+}
